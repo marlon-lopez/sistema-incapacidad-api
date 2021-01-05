@@ -1,5 +1,5 @@
 const express = require('express')
-const dotenv = require('dotenv').config({ path: './config/.env' })
+const dotenv = require('dotenv').config({ path: './config/config.env' })
 const mongoose = require('mongoose')
 const connecDB = require('./config/db')
 const { errorHandler, notFound } = require('./middleware/error')
