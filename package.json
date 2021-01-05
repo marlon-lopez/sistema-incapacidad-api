@@ -15,8 +15,12 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-async-handler": "^1.1.4",
+    "express-mongo-sanitize": "^2.0.1",
+    "helmet": "^4.3.1",
+    "hpp": "^0.2.3",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.11.9"
+    "mongoose": "^5.11.9",
+    "xss-clean": "^0.1.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.6"
