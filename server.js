@@ -7,7 +7,6 @@ const cors = require('cors')
 const hpp = require('hpp')
 const connecDB = require('./config/db')
 const { errorHandler, notFound } = require('./middleware/error')
-const cors = require('cors')
 
 connecDB()
 //routes
