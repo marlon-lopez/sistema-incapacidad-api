@@ -6,7 +6,7 @@ const { generateToken } = require('../utils/generateToken')
 //@route    POST /api/v1/auth/register
 //@access   Public
 
-exports.register = asyncHandler(async (req, res, next) => {
+exports.register = asyncHandler(async (req, res) => {
   const { email } = req.body
   //chekc if user already exists
   const userExists = await User.findOne({ email })
@@ -23,6 +23,7 @@ exports.register = asyncHandler(async (req, res, next) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      isAdmin: user.isAdmin,
       token: generateToken(user._id),
     },
   })
@@ -36,7 +37,8 @@ exports.login = asyncHandler(async (req, res) => {
 
   // Validate emil & password
   if (!email || !password) {
-    return next(new ErrorResponse('Please provide an email and password', 400))
+    res.status(400)
+    throw new Error(`Please provide an email and password`)
   }
   const user = await User.findOne({ email })
 
@@ -47,6 +49,7 @@ exports.login = asyncHandler(async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
+        isAdmin: user.isAdmin,
         token: generateToken(user._id),
       },
     })
@@ -54,6 +57,21 @@ exports.login = asyncHandler(async (req, res) => {
     res.status(401)
     throw new Error('Invalid email or password')
   }
+})
+
+//@desc     Get all users and forms
+//@route    POST /api/v1/auth/register
+//@access   Public
+exports.getUserList = asyncHandler(async (req, res) => {
+  const data = await User.find().populate({
+    path: 'forms',
+    select: 'hopital doctor startDate endDate days ',
+  })
+  res.json({
+    success: true,
+    count: data.length,
+    data: data,
+  })
 })
 
 //@desc     Get current user
@@ -72,7 +90,7 @@ exports.getUser = asyncHandler(async (req, res) => {
 // @access    Private
 
 exports.updateUser = asyncHandler(async (req, res) => {
-  const user = await User.findByIdAndUpdate(
+  let user = await User.findByIdAndUpdate(
     req.user._id,
     { ...req.body },
     {
@@ -80,6 +98,6 @@ exports.updateUser = asyncHandler(async (req, res) => {
       runValidators: true,
     },
   )
-
+  delete user._doc.password
   res.status(200).json({ success: true, data: { user } })
 })

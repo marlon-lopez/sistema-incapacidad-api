@@ -42,17 +42,24 @@ const UserSchema = new mongoose.Schema(
     },
   },
   {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  },
+  {
     timestamps: true,
   },
 )
 
+//Reverse populate with Virtuals
+UserSchema.virtual('forms', {
+  ref: 'Form',
+  localField: '_id',
+  foreignField: 'user',
+  justOne: false,
+})
+
 //Mathc user entered password to the password in DB
 UserSchema.methods.matchPassword = async function (enteredPass) {
-  console.log(this.password)
-  /*  if (enteredPass === this.password) {
-    console.log('matched')
-    return true
-  } */
   return await bcrypt.compare(enteredPass, this.password)
 }
 
