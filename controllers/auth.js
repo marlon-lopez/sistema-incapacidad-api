@@ -60,17 +60,14 @@ exports.login = asyncHandler(async (req, res) => {
 })
 
 //@desc     Get all users and forms
-//@route    POST /api/v1/auth/register
-//@access   Public
+//@route    GET /api/v1/auth/users
+//@access   Private
 exports.getUserList = asyncHandler(async (req, res) => {
-  console.log('triggered')
-  let data = await User.find().populate({
+  let data = await User.find().select('-password').populate({
     path: 'forms',
     select: 'hopital doctor startDate endDate days ',
   })
-  data.forEach((d) => {
-    delete d._doc.password
-  })
+
   res.json({
     success: true,
     count: data.length,
@@ -90,7 +87,7 @@ exports.getUser = asyncHandler(async (req, res) => {
 })
 
 // @desc      update user deatils
-// @route     PUT /api/v1/auth/updatedetails
+// @route     PUT /api/v1/auth/update
 // @access    Private
 
 exports.updateUser = asyncHandler(async (req, res) => {
@@ -101,7 +98,21 @@ exports.updateUser = asyncHandler(async (req, res) => {
       new: true,
       runValidators: true,
     },
-  )
-  delete user._doc.password
+  ).select('-password')
   res.status(200).json({ success: true, data: { user } })
+})
+
+// @desc      delete my user
+// @route     delete /api/v1/auth/me
+// @access    Private
+
+exports.deleteMyUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id)
+
+  if (!user) {
+    res.status(401)
+    throw new Error('Not authorized')
+  }
+  await User.deleteOne({ _id: req.user._id })
+  res.status(201).json({ success: true, data: {} })
 })
