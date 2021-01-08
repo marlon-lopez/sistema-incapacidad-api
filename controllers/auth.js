@@ -63,9 +63,13 @@ exports.login = asyncHandler(async (req, res) => {
 //@route    POST /api/v1/auth/register
 //@access   Public
 exports.getUserList = asyncHandler(async (req, res) => {
-  const data = await User.find().populate({
+  console.log('triggered')
+  let data = await User.find().populate({
     path: 'forms',
     select: 'hopital doctor startDate endDate days ',
+  })
+  data.forEach((d) => {
+    delete d._doc.password
   })
   res.json({
     success: true,
