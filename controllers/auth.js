@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler')
 const User = require('../models/User')
+const Form = require('../models/Form')
 const { generateToken } = require('../utils/generateToken')
 
 //@desc     Register user
@@ -97,7 +98,9 @@ exports.deleteMyUser = asyncHandler(async (req, res) => {
     res.status(401)
     throw new Error('Not authorized')
   }
-  await User.deleteOne({ _id: req.user._id })
+  const form = await Form.find({ user: user.id }).remove()
+
+  user.remove()
   res.status(201).json({ success: true, data: {} })
 })
 
@@ -185,6 +188,8 @@ exports.deleteUser = asyncHandler(async (req, res) => {
     res.status(404)
     throw new Error(`User not found with id ${req.params.id}`)
   }
-  await User.deleteOne({ _id: req.params.id })
+  const form = await Form.find({ user: req.params.id }).remove()
+
+  await user.remove()
   res.status(201).json({ success: true, data: {} })
 })

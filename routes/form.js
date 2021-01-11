@@ -5,7 +5,7 @@ const {
   getAllForms,
   updateForm,
   deleteForm,
-  getSingleForm,
+  getUserForms,
   getOwnForms,
 } = require('../controllers/form')
 
@@ -15,13 +15,11 @@ router
   .route('/')
   .post(protect, createForm)
   .get(protect, authorize(), getAllForms)
-
 router.route('/mine').get(protect, getOwnForms)
-
 router
   .route('/:id')
   .put(protect, updateForm)
-  .get(protect, getSingleForm)
+  .get(protect, getUserForms)
   .delete(protect, deleteForm)
 
 module.exports = router

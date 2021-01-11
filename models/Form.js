@@ -3,9 +3,9 @@ const mongoose = require('mongoose')
 const FormSchema = new mongoose.Schema(
   {
     user: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
+      type: mongoose.Schema.ObjectId,
       ref: 'User',
+      required: true,
     },
     hospital: {
       type: String,
@@ -27,10 +27,6 @@ const FormSchema = new mongoose.Schema(
       type: Number,
       required: [true],
     },
-  },
-  {
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true },
   },
   {
     timestamps: true,
