@@ -60,7 +60,7 @@ exports.updateForm = asyncHandler(async (req, res) => {
     throw new Error(`Resource not found with id ${req.params.id}`)
   }
   //check if its the owner
-  if (data.user.toString() !== req.user._id.toString()) {
+  if (data.user.toString() !== req.user._id.toString() && !req.user.isAdmin) {
     res.status(401)
     throw new Error(`Not authorized to update resource`)
   }

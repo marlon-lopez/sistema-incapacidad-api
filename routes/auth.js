@@ -16,11 +16,13 @@ const { protect, authorize } = require('../middleware/protectRoutes')
 const router = express.Router()
 
 router.post('/register', register)
-router.route('/users').get(protect, authorize(), getUserList)
+router
+  .route('/users')
+  .get(protect, authorize(), getUserList)
+  .post(protect, authorize(), createUser)
 router
   .route('/users/:id')
   .get(protect, authorize(), getSingleUser)
-  .post(protect, authorize(), createUser)
   .delete(protect, authorize(), deleteUser)
   .put(protect, authorize(), updateSingleUser)
 
